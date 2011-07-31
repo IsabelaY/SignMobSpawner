@@ -1,5 +1,7 @@
 package com.xhizors.SignMobSpawner;
 
+import java.util.concurrent.ConcurrentHashMap;
+
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -13,6 +15,7 @@ import com.griefcraft.model.Protection;
 public class SignMobSpawnerBlockListener extends BlockListener{
 	
 	private SignMobSpawner plugin;
+	private ConcurrentHashMap<Block, Long> nextTime = new ConcurrentHashMap<Block, Long>();
 	
 	public SignMobSpawnerBlockListener(SignMobSpawner plugin) {
 		this.plugin = plugin;
@@ -40,6 +43,9 @@ public class SignMobSpawnerBlockListener extends BlockListener{
 				return;
 			}
 			if (sign.getLine(0).contains("[Mob]")) {
+				if (nextTime.containsKey(relative) && nextTime.get(relative).longValue() > System.currentTimeMillis()) {
+					return;
+				}
 				String mobName = sign.getLine(1);
 				int num;
 				try {
@@ -51,6 +57,14 @@ public class SignMobSpawnerBlockListener extends BlockListener{
 				if (num <= 0) num = 1;
 				CreatureType cType = CreatureType.fromName(mobName);
 				if (cType != null) {
+					long delay = 5;
+					try {
+						delay = Long.parseLong(sign.getLine(3));
+					} catch (NumberFormatException e) {
+						delay = 5;
+					}
+					if (delay < 5) delay = 5;
+					nextTime.put(relative, new Long(delay + System.currentTimeMillis()));
 					while (relative.getTypeId() != 0) {
 						relative = relative.getRelative(BlockFace.UP);
 					}
