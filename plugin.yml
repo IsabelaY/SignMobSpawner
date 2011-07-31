@@ -1,0 +1,6 @@
+name: SignMobSpawner
+main: com.xhizors.SignMobSpawner.SignMobSpawner
+version: 1.0
+description: >
+             Sign Mob Spawner
+commands:
