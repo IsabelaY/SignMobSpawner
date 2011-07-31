@@ -26,13 +26,15 @@ public class SignMobSpawner extends JavaPlugin{
 	public ArrayList<String> worlds;
 	private PluginManager pm;
 	public LWC lwc = null;
+	public String version;
 	
 	public void onEnable() {
 		pm = getServer().getPluginManager();
 		PluginDescriptionFile pdf = this.getDescription();
 		name = pdf.getName();
 		setupPermissions();
-		log.info("["+name+"] Loaded");
+		version = pdf.getVersion();
+		log.info("["+name+"] " + version + " Loaded");
 		Plugin lwcPlugin = getServer().getPluginManager().getPlugin("LWC");
 		if(lwcPlugin != null) {
 		    lwc = ((LWCPlugin) lwcPlugin).getLWC();
@@ -42,7 +44,7 @@ public class SignMobSpawner extends JavaPlugin{
 	}
 	
 	public void onDisable() {
-		log.info("["+name+"] is now disabled.");
+		log.info("["+name+"] " + version + " is now disabled.");
 	}
 	
 	private void setupPermissions() {
